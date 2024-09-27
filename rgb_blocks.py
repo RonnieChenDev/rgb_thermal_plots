@@ -18,7 +18,7 @@ def main():
     blocks = []
 
     # Add blocks based on configuration.
-    field_type_choices = ['park' * park_limit, 'yard' * (block_num - park_limit)]
+    field_type_choices = ['park'] * park_limit + ['yard'] * (block_num - park_limit)
     random.shuffle(field_type_choices)
     for i in range(block_row_num):
         for j in range(block_col_num):
@@ -28,7 +28,7 @@ def main():
     for block in blocks:
         if block.field_type == 'park':
             # if it is park, add roads and more trees
-            block.add_item()
+            ...
         else:
             # if it is yard, add roads, house and a few trees
             ...
@@ -55,24 +55,24 @@ def main():
         blocks[4].add_item(Tree((random.randint(2, 18), random.randint(2, 18))))
         blocks[5].add_item(Tree((random.randint(2, 18), random.randint(2, 18))))
 
-    plt.imshow(generate_image(blocks, block_size, map_shape), vmin=0, vmax=10)
-    plt.colorbar()
+    plt.imshow(generate_image(blocks, block_size, map_shape))
+    # plt.colorbar()
 
     # draw red grids between the blocks
-    numrows = 2
-    numcols = 3
-
-    y_zeros = np.zeros(numcols + 1)
-    x_range = np.arange(0, numcols * 20 + 1, 20)
-    x_range[numcols] = x_range[numcols]
-    x_zeros = np.zeros(numrows + 1)
-    y_range = np.arange(0, numrows * 20 + 1, 20)
-    y_range[numrows] = y_range[numrows]
-
-    for i in range(0, numcols * 20, 20):
-        plt.plot(x_zeros + i, y_range - 0.5, "red", linewidth=2.5)
-    for j in range(0, numrows * 20, 20):
-        plt.plot(x_range - 0.5, y_zeros + j, "red", linewidth=2.5)
+    # numrows = 2
+    # numcols = 3
+    #
+    # y_zeros = np.zeros(numcols + 1)
+    # x_range = np.arange(0, numcols * 20 + 1, 20)
+    # x_range[numcols] = x_range[numcols]
+    # x_zeros = np.zeros(numrows + 1)
+    # y_range = np.arange(0, numrows * 20 + 1, 20)
+    # y_range[numrows] = y_range[numrows]
+    #
+    # for i in range(0, numcols * 20, 20):
+    #     plt.plot(x_zeros + i, y_range - 0.5, "red", linewidth=2.5)
+    # for j in range(0, numrows * 20, 20):
+    #     plt.plot(x_range - 0.5, y_zeros + j, "red", linewidth=2.5)
 
     plt.title("Task 4: (2,3) grid of blocks with houses and trees")
     plt.show()

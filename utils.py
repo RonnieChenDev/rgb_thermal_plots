@@ -12,11 +12,29 @@ def read_from_csv(file_path):
         return file_content
 
 
-def generate_image(b, s, mshape):
-    grid = np.zeros((mshape[0] * s, mshape[1] * s))
-    print(grid)
-    for block in b:
-        (cx_start, ry_start) = block.get_topleft()  # x,y mapping to column,row
-        print(block, cx_start, ry_start)
-        grid[ry_start:ry_start + s, cx_start:cx_start + s] = block.generate_image()[:, :]
-    return grid
+def generate_image(blocks, block_size, map_shape):
+    map_image = np.zeros((map_shape[0] * block_size, map_shape[1] * block_size, 3), dtype=np.uint8)
+    for block in blocks:
+        # (cx_start, ry_start) = block.get_topleft()  # x,y mapping to column,row
+        # print(block, cx_start, ry_start)
+        # grid[ry_start:ry_start + s, cx_start:cx_start + s] = block.generate_image()[:, :]
+        block_img = block.generate_image()
+        topleft = block.get_topleft()
+
+        x_start, y_start = topleft
+        x_end = x_start + block_img.shape[1]
+        y_end = y_start + block_img.shape[0]
+        map_image[y_start:y_end, x_start:x_end, :] = block_img
+    return map_image
+
+
+def get_rgb_colour(colour_name):
+    colour_map = {
+        'pine_green': [1, 121, 111],
+        'grey': [128, 128, 128],
+        'brown': [139, 69, 19],
+        'orange': [255, 165, 0],
+        'pale_green': [152, 251, 152]
+    }
+    # return white by default
+    return colour_map.get(colour_name, [255, 255, 255])
