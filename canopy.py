@@ -76,7 +76,7 @@ class House(Item):
 
 class Road(Item):
 
-    def __init__(self, pos, heat_capacity=1.0, colour_name='grey', length=5, width=5):
+    def __init__(self, pos, heat_capacity=1.0, colour_name='grey', length=1, width=1):
         super().__init__(pos, colour_name, length, width, heat_capacity)
 
     def __str__(self):
@@ -106,14 +106,37 @@ class Block:
         return self.topleft
 
     def is_occupied(self, x, y):
-        return self.occupied_loc[x, y]
+        return self.occupied_loc[y, x]
+
+    def mark_as_occupied(self, points):
+        for x, y in points:
+            self.occupied_loc[y, x] = True
 
     def add_item(self, item):
-        x, y = item.pos
+        # x, y = item.pos
         # if self.is_occupied(x, y):
         #     raise ValueError(f"Position ({x},{y}) is already occupied.")
         # self.occupied_loc[x, y] = True
+        for x in range(item.pos[0], item.pos[0] + item.width):
+            for y in range(item.pos[1], item.pos[1] + item.length):
+                if self.is_occupied(x, y):
+                    raise ValueError(f"Position ({x},{y}) is already occupied.")
+                self.occupied_loc[y, x] = True
         self.items.append(item)
+
+    def add_road(self):
+        road_x_values = np.linspace(random.randint(2, self.size - 2), random.randint(2, self.size - 2),
+                                    50).astype(int)
+        y_values = np.linspace(random.randint(2, self.size - 2), random.randint(2, self.size - 2), 50).astype(
+            int)
+        points = list(zip(road_x_values, y_values))
+        # Check if there is any point conflict with others.
+        for x, y in points:
+            if self.is_occupied(x, y):
+                raise ValueError(f"({x}, {y}) is already occupied, cannot add road.")
+        self.mark_as_occupied(points)
+        for point in points:
+            self.add_item(Road(point))
 
     def generate_image(self):
         bg_rgb_colour = get_rgb_colour(self.block_bg_color)

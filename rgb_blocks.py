@@ -28,7 +28,7 @@ def main():
     for block in blocks:
         if block.field_type == 'park':
             # if it is park, add roads and more trees
-            ...
+            block.add_road()
         else:
             # if it is yard, add roads, house and a few trees
             ...

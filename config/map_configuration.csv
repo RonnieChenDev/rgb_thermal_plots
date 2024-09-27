@@ -1,2 +1,2 @@
-Please input in sequence: Number of block rows, number of block columns, block size, percentage of park area, separating with ',':
+Please input in sequence: Row quantity of blocks, Column quantity of blocks, block size, percentage of park area, separating with ',':
 2,3,20,0.3
