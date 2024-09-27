@@ -15,9 +15,6 @@ def read_from_csv(file_path):
 def generate_image(blocks, block_size, map_shape):
     map_image = np.zeros((map_shape[0] * block_size, map_shape[1] * block_size, 3), dtype=np.uint8)
     for block in blocks:
-        # (cx_start, ry_start) = block.get_topleft()  # x,y mapping to column,row
-        # print(block, cx_start, ry_start)
-        # grid[ry_start:ry_start + s, cx_start:cx_start + s] = block.generate_image()[:, :]
         block_img = block.generate_image()
         topleft = block.get_topleft()
 
@@ -31,10 +28,11 @@ def generate_image(blocks, block_size, map_shape):
 def get_rgb_colour(colour_name):
     colour_map = {
         'pine_green': [1, 121, 111],
-        'grey': [128, 128, 128],
+        'grey': [50, 50, 50],
         'brown': [139, 69, 19],
         'orange': [255, 165, 0],
-        'pale_green': [152, 251, 152]
+        'pale_green': [152, 251, 152],
+        'light_grey': [169, 169, 169]
     }
     # return white by default
     return colour_map.get(colour_name, [255, 255, 255])
