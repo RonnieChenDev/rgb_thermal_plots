@@ -33,10 +33,12 @@ def main():
         if block.field_type == 'park':
             # if it is park, add roads and more trees
             block.add_road()
+            block.add_trees(block.field_type)
         else:
             # if it is yard, add roads, house and a few trees
             block.add_road()
             block.add_house(6, 4)
+            block.add_trees(block.field_type)
 
     plt.imshow(generate_image(blocks, block_size, map_shape))
 

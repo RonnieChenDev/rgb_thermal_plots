@@ -171,7 +171,25 @@ class Block:
                 self.bulk_mark_as_occupied(house_points)
                 house_coord_search_done = True
 
-        self.add_item(House(pos=(house_x, house_y), length=6, width=4))
+        self.add_item(House(pos=(house_x, house_y), length=house_length, width=house_width))
+
+    def add_trees(self, field_type):
+        quantity_of_trees = 0
+        if field_type == 'park':
+            quantity_of_trees = random.randint(25, 30)
+        elif field_type == 'yard':
+            quantity_of_trees = random.randint(15, 20)
+        trees_points = []
+        for _ in range(quantity_of_trees):
+            tree_x = random.randint(0, self.size - 1)
+            tree_y = random.randint(0, self.size - 1)
+
+            if not self.is_occupied(tree_x, tree_y):
+                trees_points.append((tree_x, tree_y))
+
+        self.bulk_mark_as_occupied(trees_points)
+        for tree in trees_points:
+            self.add_item(Tree(pos=tree, length=1, width=1))
 
     def generate_image(self):
         bg_rgb_colour = get_rgb_colour(self.block_bg_color)
@@ -220,3 +238,4 @@ class Map:
         for block in self.blocks:
             map_area.append(block.generate_thermal_image())
         return np.array(map_area)
+

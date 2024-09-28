@@ -1,4 +1,6 @@
 import numpy as np
+import random
+from canopy import *
 
 
 # return the content in the file, in list. Figures are transferred from string to integer.
