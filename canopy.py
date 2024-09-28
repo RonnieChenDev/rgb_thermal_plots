@@ -24,7 +24,7 @@ class Item:
         self.colour_name = colour_name  # colour_name like orange, pine_green... translate to RGB tuple by using utils.
         self.width = width
         self.length = length
-        self.heat_capacity = heat_capacity
+        self.heat_capacity = float(heat_capacity)
 
     def get_image(self):
         h = int(self.length)
@@ -47,10 +47,10 @@ class Item:
         return self.width
 
     def get_colour(self):
-        return self.colour
+        return self.colour_name
 
-    def set_colour(self, colour):
-        self.colour = colour
+    def set_colour(self, colour_name):
+        self.colour_name = colour_name
 
     def get_thermal_value(self, temperature):
         return self.heat_capacity * temperature
@@ -58,7 +58,7 @@ class Item:
 
 class Tree(Item):
 
-    def __init__(self, pos, heat_capacity=5.0, colour_name='pine_green', length=2, width=2):
+    def __init__(self, pos, length, width, heat_capacity=4.0, colour_name='pine_green'):
         super().__init__(pos, colour_name, length, width, heat_capacity)
 
     def __str__(self):
@@ -67,7 +67,7 @@ class Tree(Item):
 
 class House(Item):
 
-    def __init__(self, pos, length, width, heat_capacity=2.0, colour_name='orange'):
+    def __init__(self, pos, length, width, heat_capacity=2, colour_name='orange'):
         super().__init__(pos, colour_name, length, width, heat_capacity)
 
     def __str__(self):
@@ -116,39 +116,37 @@ class Block:
         self.occupied_loc[y, x] = True
 
     def add_item(self, item):
-        # x, y = item.pos
-        # if self.is_occupied(x, y):
-        #     raise ValueError(f"Position ({x},{y}) is already occupied.")
-        # self.occupied_loc[x, y] = True
-        # for x in range(item.pos[0], item.pos[0] + item.width):
-        #     for y in range(item.pos[1], item.pos[1] + item.length):
-        #         if self.is_occupied(x, y):
-        #             raise ValueError(f"Position ({x},{y}) is already occupied.")
-        #         self.occupied_loc[y, x] = True
         self.items.append(item)
 
     def add_road(self):
         # make sure the start point is at the left top corner
         start_point = (random.randint(2, self.size // 2), random.randint(2, self.size // 2))
         points = []
+        mark_points = []
         if random.randint(1, 10) > 5:
             # horizontal line
             for x in range(start_point[0], min(start_point[0] + random.randint(5, 15), self.size - 1)):
                 points.append((x, start_point[1]))
+                # consider road width is 1 and mark the whole points in a road
+                for w in range(1 + 1):
+                    mark_points.append((x, start_point[1] + w))
         else:
             # vertical line
             for y in range(start_point[1], min(start_point[1] + random.randint(5, 15), self.size - 1)):
                 points.append((start_point[0], y))
+                # consider road width is 1 and mark the whole points in a road
+                for w in range(1 + 1):
+                    mark_points.append((start_point[0] + w, y))
 
-        # Add the coord of each element road in the line to occupied list
-        self.bulk_mark_as_occupied(points)
+        # Add the coord of each element road in the line to occupied list. Include the width
+        self.bulk_mark_as_occupied(mark_points)
 
         # Add road. Thermal property and colour_name differ when it's in park or yard.
         for point in points:
             if self.field_type == 'park':
-                self.add_item(Road(pos=point, colour_name='light_grey', heat_capacity=1.0))
+                self.add_item(Road(pos=point, colour_name='light_grey', heat_capacity=1.5))
             elif self.field_type == 'yard':
-                self.add_item(Road(pos=point, colour_name='grey', heat_capacity=1.0))
+                self.add_item(Road(pos=point, colour_name='grey', heat_capacity=1))
             else:
                 raise ValueError(f"Invalid inputs for block_type: {self.field_type}. "
                                  f"The expected value is either 'park' or 'yard'.")
@@ -166,8 +164,8 @@ class Block:
             house_points = []
             for i in range(house_x, (house_x + house_length)):
                 for j in range(house_y, (house_y + house_width)):
-                    house_points.append((j, i))
-                    if self.is_occupied(j, i):
+                    house_points.append((i, j))
+                    if self.is_occupied(i, j):
                         not_occupied_house_coord = False
             if not_occupied_house_coord:
                 self.bulk_mark_as_occupied(house_points)

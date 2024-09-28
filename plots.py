@@ -38,28 +38,6 @@ def main():
             block.add_road()
             block.add_house(6, 4)
 
-    # Top row. One house and three trees in each block.
-    # blocks[0].add_item(Tree((2, 4)))
-    # blocks[0].add_item(Tree((4, 15)))
-    # blocks[0].add_item(Tree((12, 6)))
-    # blocks[0].add_item(House((11, 12)))
-    #
-    # blocks[1].add_item(Tree((2, 4)))
-    # blocks[1].add_item(Tree((4, 15)))
-    # blocks[1].add_item(Tree((12, 6)))
-    # blocks[1].add_item(House((11, 12)))
-    #
-    # blocks[2].add_item(Tree((2, 4)))
-    # blocks[2].add_item(Tree((4, 15)))
-    # blocks[2].add_item(Tree((12, 6)))
-    # blocks[2].add_item(House((11, 12)))
-
-    # Bottom row. Random trees in a range of shapes of green.
-    # for _ in range(6):
-    #     blocks[3].add_item(Tree((random.randint(2, 18), random.randint(2, 18))))
-    #     blocks[4].add_item(Tree((random.randint(2, 18), random.randint(2, 18))))
-    #     blocks[5].add_item(Tree((random.randint(2, 18), random.randint(2, 18))))
-
     plt.imshow(generate_image(blocks, block_size, map_shape))
 
     plt.title("Task 4: (2,3) grid of blocks with houses and trees")
