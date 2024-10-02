@@ -14,34 +14,39 @@ import random
 import numpy as np
 import matplotlib
 from utils import *
+import math
 
 matplotlib.use('TKAgg')
 
 
 class Item:
-    def __init__(self, pos, colour_name, length, width, heat_capacity):
+    def __init__(self, pos, colour_name, height, width, heat_capacity):
         self.pos = pos
         self.colour_name = colour_name  # colour_name like orange, pine_green... translate to RGB tuple by using utils.
+        self.height = height
         self.width = width
-        self.length = length
         self.heat_capacity = float(heat_capacity)
 
     def get_image(self):
-        h = int(self.length)
+        h = int(self.height)
         w = int(self.width)
         img = np.ones((h, w, 3), dtype=np.uint8) * get_rgb_colour(self.colour_name)  # 3D RGB
         return img
 
     def get_coord(self):
+        # central point coord of the item
         return self.pos
 
     def get_topleft(self):
-        xleft = self.pos[0] - self.width // 2
-        ytop = self.pos[1] - self.length // 2
+        # While handling image, y-axis starting from 0 at the top of the image, instead of bottom.
+        # X-axis starting from zero from left.
+        # Top_left coord is not accurate when width or height is odd, as coord requires integer inputs.
+        xleft = math.ceil(self.pos[0] - self.width / 2)
+        ytop = math.ceil(self.pos[1] - self.height / 2)
         return xleft, ytop
 
-    def get_length(self):
-        return self.length
+    def get_height(self):
+        return self.height
 
     def get_width(self):
         return self.width
@@ -58,8 +63,8 @@ class Item:
 
 class Tree(Item):
 
-    def __init__(self, pos, length, width, heat_capacity=4.0, colour_name='pine_green'):
-        super().__init__(pos, colour_name, length, width, heat_capacity)
+    def __init__(self, pos, height, width, heat_capacity=4.0, colour_name='pine_green'):
+        super().__init__(pos, colour_name, height, width, heat_capacity)
 
     def __str__(self):
         return f"Tree: {self.pos}"
@@ -67,17 +72,17 @@ class Tree(Item):
 
 class House(Item):
 
-    def __init__(self, pos, length, width, heat_capacity=2, colour_name='orange'):
-        super().__init__(pos, colour_name, length, width, heat_capacity)
+    def __init__(self, pos, height, width, heat_capacity=2, colour_name='orange'):
+        super().__init__(pos, colour_name, height, width, heat_capacity)
 
     def __str__(self):
         return f"House: {self.pos}"
 
 
 class Road(Item):
-
-    def __init__(self, pos, colour_name, heat_capacity, length=1, width=1):
-        super().__init__(pos, colour_name, heat_capacity, length, width)
+    # TODO: why height and width are invalid sometimes
+    def __init__(self, pos, colour_name, heat_capacity, height=1, width=1):
+        super().__init__(pos, colour_name, heat_capacity, height, width)
 
     def __str__(self):
         return f"Road: {self.pos}"
@@ -151,6 +156,7 @@ class Block:
                 raise ValueError(f"Invalid inputs for block_type: {self.field_type}. "
                                  f"The expected value is either 'park' or 'yard'.")
 
+    # TODO: height or length naming, and overlapping coord fix
     def add_house(self, house_length, house_width):
         house_x = 0
         house_y = 0
@@ -171,7 +177,7 @@ class Block:
                 self.bulk_mark_as_occupied(house_points)
                 house_coord_search_done = True
 
-        self.add_item(House(pos=(house_x, house_y), length=house_length, width=house_width))
+        self.add_item(House(pos=(house_x, house_y), height=house_length, width=house_width))
 
     def add_trees(self, field_type):
         quantity_of_trees = 0
@@ -189,7 +195,7 @@ class Block:
 
         self.bulk_mark_as_occupied(trees_points)
         for tree in trees_points:
-            self.add_item(Tree(pos=tree, length=1, width=1))
+            self.add_item(Tree(pos=tree, height=1, width=1))
 
     def generate_image(self):
         bg_rgb_colour = get_rgb_colour(self.block_bg_color)
@@ -224,18 +230,35 @@ class Block:
 
 
 class Map:
-    def __init__(self, blocks):
+    def __init__(self, blocks, map_config_file_path):
         self.blocks = blocks
+        self.map_config_file_path = map_config_file_path
 
-    def generate_rgb_view(self):
-        map_area = []
-        for block in self.blocks:
-            map_area.append(block.generate_image())
-        return np.array(map_area)
+    def generate_rgb_view(self, blocks, map_config_file_path):
+        # map_area = []
+        # for block in self.blocks:
+        #     map_area.append(block.generate_rgb_image())
+        # return np.array(map_area)
+
+        map_config_string = read_from_csv(map_config_file_path)[0]
+        map_config_dict = get_map_config(map_config_string)
+
+        block_size = map_config_dict['block_size']
+        map_shape = map_config_dict['map_shape']
+
+        map_image = np.zeros((map_shape[0] * block_size, map_shape[1] * block_size, 3), dtype=np.uint8)
+        for block in blocks:
+            block_img = block.generate_image()
+            topleft = block.get_topleft()
+
+            x_start, y_start = topleft
+            x_end = x_start + block_img.shape[1]
+            y_end = y_start + block_img.shape[0]
+            map_image[y_start:y_end, x_start:x_end, :] = block_img
+        return map_image
 
     def generate_thermal_view(self):
         map_area = []
         for block in self.blocks:
             map_area.append(block.generate_thermal_image())
         return np.array(map_area)
-

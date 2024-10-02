@@ -8,14 +8,15 @@ matplotlib.use('Qt5Agg')
 
 def main():
     # read from config file for the number of block rows, number of block columns, block size
-    map_config = read_from_csv("config/map_configuration.csv")[0]
-    block_size = int(map_config[2])
-    block_row_num = int(map_config[0])
-    block_col_num = int(map_config[1])
-    block_num = block_row_num * block_col_num
-    map_shape = (block_row_num, block_col_num)
-    # total of blocks * percentage of park area
-    park_limit = round(float(map_config[3]) * block_num)
+    map_config_string = read_from_csv("config/map_configuration.csv")[0]
+    map_config_dict = get_map_config(map_config_string)
+
+    block_size = map_config_dict['block_size']
+    block_row_num = map_config_dict['block_row_num']
+    block_col_num = map_config_dict['block_col_num']
+    block_num = map_config_dict['block_num']
+    map_shape = map_config_dict['map_shape']
+    park_limit = map_config_dict['park_limit']
 
     # create a list to hold all the blocks
     blocks = []
@@ -40,7 +41,8 @@ def main():
             block.add_house(6, 4)
             block.add_trees(block.field_type)
 
-    plt.imshow(generate_image(blocks, block_size, map_shape))
+    plt.imshow(generate_rgb_image(blocks, block_size, map_shape))
+    # plt.imshow(generate_rgb_view(blocks, block_size, map_shape))
 
     plt.title("Task 4: (2,3) grid of blocks with houses and trees")
     plt.show()
