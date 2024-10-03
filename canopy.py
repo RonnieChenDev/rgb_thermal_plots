@@ -244,7 +244,16 @@ class Map:
     def get_env_temperature(self):
         return self.temperature
 
-    def generate_rgb_view(self, rgb_blocks, map_config):
+    def generate_map_structure(self):
+        field_type_choices = ['park'] * self.park_limit + ['yard'] * (self.block_num - self.park_limit)
+        random.shuffle(field_type_choices)
+        for i in range(self.block_row_num):
+            for j in range(self.block_col_num):
+                field = field_type_choices.pop()
+                self.rgb_blocks.append(Block(self.block_size, ((j * self.block_size), (i * self.block_size)), field))
+                self.thermal_blocks.append(Block(self.block_size, ((j * self.block_size), (i * self.block_size)), field))
+
+    def generate_rgb_view(self, rgb_blocks):
         map_image = np.zeros((self.map_shape[0] * self.block_size, self.map_shape[1] * self.block_size, 3),
                              dtype=np.uint8)
         for block in rgb_blocks:

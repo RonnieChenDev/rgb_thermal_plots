@@ -26,11 +26,13 @@ def main():
 
     # generate blocks with park or yard field type based on park_limit
     # rgb and thermal view share the same map structure
-    field_type_choices = ['park'] * park_limit + ['yard'] * (block_num - park_limit)
-    random.shuffle(field_type_choices)
-    for i in range(block_row_num):
-        for j in range(block_col_num):
-            rgb_blocks.append(Block(block_size, ((j * block_size), (i * block_size)), field_type_choices.pop()))
+    # field_type_choices = ['park'] * park_limit + ['yard'] * (block_num - park_limit)
+    # random.shuffle(field_type_choices)
+    # for i in range(block_row_num):
+    #     for j in range(block_col_num):
+    #         rgb_blocks.append(Block(block_size, ((j * block_size), (i * block_size)), field_type_choices.pop()))
+    #         thermal_blocks.append(Block(block_size, ((j * block_size), (i * block_size)), field_type_choices.pop()))
+    plots_map.generate_map_structure()
 
     # Add items to blocks
     for block in rgb_blocks:
@@ -45,7 +47,7 @@ def main():
             block.add_trees(block.field_type)
 
     # plt.imshow(generate_rgb_image(rgb_blocks, block_size, map_shape))
-    plt.imshow(plots_map.generate_rgb_view(rgb_blocks, map_config))
+    plt.imshow(plots_map.generate_rgb_view(rgb_blocks))
 
     plt.title("Task 4: (2,3) grid of blocks with houses and trees")
     plt.show()
