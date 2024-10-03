@@ -14,20 +14,6 @@ def read_from_csv(file_path):
         return file_content
 
 
-def generate_rgb_image(blocks, block_size, map_shape):
-    # TODO: consider move to Map class
-    map_image = np.zeros((map_shape[0] * block_size, map_shape[1] * block_size, 3), dtype=np.uint8)
-    for block in blocks:
-        block_img = block.generate_image()
-        topleft = block.get_topleft()
-
-        x_start, y_start = topleft
-        x_end = x_start + block_img.shape[1]
-        y_end = y_start + block_img.shape[0]
-        map_image[y_start:y_end, x_start:x_end, :] = block_img
-    return map_image
-
-
 def get_rgb_colour(colour_name):
     colour_map = {
         'pine_green': [1, 121, 111],
@@ -41,15 +27,15 @@ def get_rgb_colour(colour_name):
     return colour_map.get(colour_name, [255, 255, 255])
 
 
-def get_map_config(map_config):
-    block_size = int(map_config[2])
-    block_row_num = int(map_config[0])
-    block_col_num = int(map_config[1])
+def get_map_config(map_config_content_list):
+    block_size = int(map_config_content_list[0][2])
+    block_row_num = int(map_config_content_list[0][0])
+    block_col_num = int(map_config_content_list[0][1])
     block_num = block_row_num * block_col_num
     map_shape = (block_row_num, block_col_num)
 
     # total of blocks * percentage of park area
-    park_limit = round(float(map_config[3]) * block_num)
+    park_limit = round(float(map_config_content_list[0][3]) * block_num)
 
     map_config = {"block_size": block_size, "block_row_num": block_row_num, "block_col_num": block_col_num,
                   "block_num": block_num, "map_shape": map_shape, "park_limit": park_limit}

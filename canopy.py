@@ -197,7 +197,7 @@ class Block:
         for tree in trees_points:
             self.add_item(Tree(pos=tree, height=1, width=1))
 
-    def generate_image(self):
+    def generate_block_image(self):
         bg_rgb_colour = get_rgb_colour(self.block_bg_color)
         grid = np.ones((self.size, self.size, 3), dtype=np.uint8) * bg_rgb_colour  # 3D RGB grid, preset bg colour
 
@@ -230,25 +230,25 @@ class Block:
 
 
 class Map:
-    def __init__(self, blocks, map_config_file_path):
-        self.blocks = blocks
-        self.map_config_file_path = map_config_file_path
+    def __init__(self, rgb_blocks, thermal_blocks, map_config, temperature=25):
+        self.rgb_blocks = rgb_blocks
+        self.thermal_blocks = thermal_blocks
+        self.block_size = map_config['block_size']
+        self.block_row_num = map_config['block_row_num']
+        self.block_col_num = map_config['block_col_num']
+        self.block_num = map_config['block_num']
+        self.map_shape = map_config['map_shape']
+        self.park_limit = map_config['park_limit']
+        self.temperature = temperature
 
-    def generate_rgb_view(self, blocks, map_config_file_path):
-        # map_area = []
-        # for block in self.blocks:
-        #     map_area.append(block.generate_rgb_image())
-        # return np.array(map_area)
+    def get_env_temperature(self):
+        return self.temperature
 
-        map_config_string = read_from_csv(map_config_file_path)[0]
-        map_config_dict = get_map_config(map_config_string)
-
-        block_size = map_config_dict['block_size']
-        map_shape = map_config_dict['map_shape']
-
-        map_image = np.zeros((map_shape[0] * block_size, map_shape[1] * block_size, 3), dtype=np.uint8)
-        for block in blocks:
-            block_img = block.generate_image()
+    def generate_rgb_view(self, rgb_blocks, map_config):
+        map_image = np.zeros((self.map_shape[0] * self.block_size, self.map_shape[1] * self.block_size, 3),
+                             dtype=np.uint8)
+        for block in rgb_blocks:
+            block_img = block.generate_block_image()
             topleft = block.get_topleft()
 
             x_start, y_start = topleft
