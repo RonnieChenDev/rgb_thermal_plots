@@ -20,12 +20,13 @@ matplotlib.use('TKAgg')
 
 
 class Item:
-    def __init__(self, pos, colour_name, height, width, heat_capacity):
+    def __init__(self, pos, colour_name, height, width, heat_capacity, init_temperature=15):
         self.pos = pos
         self.colour_name = colour_name  # colour_name like orange, pine_green... translate to RGB tuple by using utils.
         self.height = height
         self.width = width
         self.heat_capacity = float(heat_capacity)
+        self.init_temperature = float(init_temperature)  # all the items are having same initial temperature
 
     def get_image(self):
         h = int(self.height)
@@ -80,7 +81,6 @@ class House(Item):
 
 
 class Road(Item):
-    # TODO: figure out why height of horizontal road does take effect
     def __init__(self, pos, colour_name, heat_capacity, height, width):
         super().__init__(pos, colour_name, heat_capacity, height, width)
 
@@ -171,8 +171,8 @@ class Block:
             # random generate a coord for house, and compare with existing occupied coord
             # use floor divide to make the random range smaller, in case over the boundary
             # minus 1 in case it generates right on the boundary of block
-            house_x = random.randint(0, math.floor(self.size - house_width / 2) - 1)
-            house_y = random.randint(0, math.floor(self.size - house_height / 2) - 1)
+            house_x = random.randint(math.ceil(house_width / 2), math.floor(self.size - house_width / 2) - 1)
+            house_y = random.randint(math.ceil(house_height / 2), math.floor(self.size - house_height / 2) - 1)
 
             not_occupied_house_coord = True
             house_points = []
@@ -209,7 +209,7 @@ class Block:
 
     def generate_block_image(self):
         bg_rgb_colour = get_rgb_colour(self.block_bg_color)
-        grid = np.ones((self.size, self.size, 3), dtype=np.uint8) * bg_rgb_colour  # 3D RGB grid, preset bg colour
+        rgb_grid = np.ones((self.size, self.size, 3), dtype=np.uint8) * bg_rgb_colour  # 3D RGB grid, preset bg colour
 
         for item in self.items:
             topleft = item.get_topleft()  # topleft coord of item within Block
@@ -222,37 +222,43 @@ class Block:
             img_height = ry_stop - ry_start
             img_width = cx_stop - cx_start
 
-            print(f"Topleft: {topleft}, img shape: {img.shape}, grid shape: {grid.shape}")
+            print(f"Topleft: {topleft}, img shape: {img.shape}, grid shape: {rgb_grid.shape}")
             print(f"Placing image from ({ry_start}:{ry_stop}, {cx_start}:{cx_stop})")
 
             if img_height > 0 and img_width > 0:
-                grid[ry_start:ry_stop, cx_start:cx_stop, :] = img[:img_height, :img_width, :]  # overlay item on grid
+                rgb_grid[ry_start:ry_stop, cx_start:cx_stop, :] = img[:img_height, :img_width,
+                                                                  :]  # overlay item on grid
             else:
                 print(f"Invalid slice: start ({cx_start}, {ry_start}), stop ({cx_stop}, {ry_stop})")
 
-        return grid
+        return rgb_grid
 
     def generate_thermal_image(self):
-        ...
+        thermal_grid = np.zeros((self.size, self.size))  # 2d grid
+
+        for item in self.items:
+            topleft = item.get_topleft()
+            ...
 
     def __str__(self):
         return f"Block: {self.topleft}, #items = {len(self.items)}"
 
 
 class Map:
-    def __init__(self, rgb_blocks, thermal_blocks, map_config, temperature=25):
+    def __init__(self, rgb_blocks, thermal_blocks, map_config, temperature_daytime_list):
         self.rgb_blocks = rgb_blocks
         self.thermal_blocks = thermal_blocks
+
+        # map structure properties
         self.block_size = map_config['block_size']
         self.block_row_num = map_config['block_row_num']
         self.block_col_num = map_config['block_col_num']
         self.block_num = map_config['block_num']
         self.map_shape = map_config['map_shape']
         self.park_limit = map_config['park_limit']
-        self.temperature = temperature
 
-    def get_env_temperature(self):
-        return self.temperature
+        # thermal: daytime temperature list over 12 hours
+        self.temperature_daytime_list = temperature_daytime_list
 
     # generate blocks with park or yard field type based on park_limit
     # rgb and thermal view share the same map structure

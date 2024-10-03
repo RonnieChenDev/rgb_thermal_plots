@@ -41,3 +41,8 @@ def get_map_config(map_config_content_list):
                   "block_num": block_num, "map_shape": map_shape, "park_limit": park_limit}
 
     return map_config
+
+
+def get_temperature_daytime(temperature_daytime_content_list):
+    temperature_list = temperature_daytime_content_list[0]
+    return temperature_list
