@@ -244,6 +244,8 @@ class Map:
     def get_env_temperature(self):
         return self.temperature
 
+    # generate blocks with park or yard field type based on park_limit
+    # rgb and thermal view share the same map structure
     def generate_map_structure(self):
         field_type_choices = ['park'] * self.park_limit + ['yard'] * (self.block_num - self.park_limit)
         random.shuffle(field_type_choices)
