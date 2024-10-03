@@ -23,12 +23,12 @@ def main():
     for block in rgb_blocks:
         if block.field_type == 'park':
             # if it is park, add roads and more trees
-            block.add_road()
+            block.add_road(1, 1)
             block.add_trees(block.field_type)
         else:
             # if it is yard, add roads, house and a few trees
-            block.add_road()
-            block.add_house(6, 4)
+            block.add_road(1, 1)
+            block.add_house(4, 6)
             block.add_trees(block.field_type)
 
     plt.imshow(plots_map.generate_rgb_view(rgb_blocks))

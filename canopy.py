@@ -80,8 +80,8 @@ class House(Item):
 
 
 class Road(Item):
-    # TODO: why height and width are invalid sometimes
-    def __init__(self, pos, colour_name, heat_capacity, height=1, width=1):
+    # TODO: figure out why height of horizontal road does take effect
+    def __init__(self, pos, colour_name, heat_capacity, height, width):
         super().__init__(pos, colour_name, heat_capacity, height, width)
 
     def __str__(self):
@@ -123,25 +123,29 @@ class Block:
     def add_item(self, item):
         self.items.append(item)
 
-    def add_road(self):
+    def add_road(self, road_height, road_width):
         # make sure the start point is at the left top corner
         start_point = (random.randint(2, self.size // 2), random.randint(2, self.size // 2))
         points = []
         mark_points = []
+
+        # random to get True or False
         if random.randint(1, 10) > 5:
             # horizontal line
             for x in range(start_point[0], min(start_point[0] + random.randint(5, 15), self.size - 1)):
                 points.append((x, start_point[1]))
                 # consider road width is 1 and mark the whole points in a road
-                for w in range(1 + 1):
+                for w in range(road_width + 1):
                     mark_points.append((x, start_point[1] + w))
+                    mark_points.append((x, start_point[1] - w))
         else:
             # vertical line
             for y in range(start_point[1], min(start_point[1] + random.randint(5, 15), self.size - 1)):
                 points.append((start_point[0], y))
                 # consider road width is 1 and mark the whole points in a road
-                for w in range(1 + 1):
+                for w in range(road_width + 1):
                     mark_points.append((start_point[0] + w, y))
+                    mark_points.append((start_point[0] - w, y))
 
         # Add the coord of each element road in the line to occupied list. Include the width
         self.bulk_mark_as_occupied(mark_points)
@@ -149,27 +153,33 @@ class Block:
         # Add road. Thermal property and colour_name differ when it's in park or yard.
         for point in points:
             if self.field_type == 'park':
-                self.add_item(Road(pos=point, colour_name='light_grey', heat_capacity=1.5))
+                self.add_item(Road(pos=point, colour_name='light_grey', heat_capacity=1.5,
+                                   height=road_height, width=road_width))
             elif self.field_type == 'yard':
-                self.add_item(Road(pos=point, colour_name='grey', heat_capacity=1))
+                self.add_item(Road(pos=point, colour_name='grey', heat_capacity=1,
+                                   height=road_height, width=road_width))
             else:
                 raise ValueError(f"Invalid inputs for block_type: {self.field_type}. "
                                  f"The expected value is either 'park' or 'yard'.")
 
-    # TODO: height or length naming, and overlapping coord fix
-    def add_house(self, house_length, house_width):
+    def add_house(self, house_height, house_width):
+        # central coord of house item
         house_x = 0
         house_y = 0
         house_coord_search_done = False
         while house_coord_search_done is not True:
             # random generate a coord for house, and compare with existing occupied coord
-            house_x = random.randint(0, self.size - house_length)
-            house_y = random.randint(0, self.size - house_width)
+            # use floor divide to make the random range smaller, in case over the boundary
+            # minus 1 in case it generates right on the boundary of block
+            house_x = random.randint(0, math.floor(self.size - house_width / 2) - 1)
+            house_y = random.randint(0, math.floor(self.size - house_height / 2) - 1)
 
             not_occupied_house_coord = True
             house_points = []
-            for i in range(house_x, (house_x + house_length)):
-                for j in range(house_y, (house_y + house_width)):
+            # here use floor and ceil divide to the boundary to occupy larger area in case any issue
+            # plus 1 to include the right boundary of range to the loop
+            for i in range(math.floor(house_x - house_width / 2), math.ceil(house_x + house_width / 2) + 1):
+                for j in range(math.floor(house_y - house_height / 2), math.ceil(house_y + house_height / 2) + 1):
                     house_points.append((i, j))
                     if self.is_occupied(i, j):
                         not_occupied_house_coord = False
@@ -177,7 +187,7 @@ class Block:
                 self.bulk_mark_as_occupied(house_points)
                 house_coord_search_done = True
 
-        self.add_item(House(pos=(house_x, house_y), height=house_length, width=house_width))
+        self.add_item(House(pos=(house_x, house_y), height=house_height, width=house_width))
 
     def add_trees(self, field_type):
         quantity_of_trees = 0
