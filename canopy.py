@@ -296,7 +296,8 @@ class Map:
         return map_image
 
     def generate_thermal_view(self, env_temperature):
-        thermal_image = np.zeros((self.map_shape[0] * self.block_size, self.map_shape[1] * self.block_size), dtype=np.float32)
+        thermal_image = np.zeros((self.map_shape[0] * self.block_size, self.map_shape[1] * self.block_size),
+                                 dtype=np.float32)
 
         for block in self.blocks:
             block_img = block.generate_thermal_image(env_temperature)
@@ -308,4 +309,3 @@ class Map:
             thermal_image[y_start:y_end, x_start:x_end] = block_img
 
         return thermal_image
-
