@@ -20,13 +20,15 @@ matplotlib.use('TKAgg')
 
 
 class Item:
-    def __init__(self, pos, colour_name, height, width, heat_capacity, init_temperature=15):
+    def __init__(self, pos, colour_name, height, width, heat_capacity, item_temperature=15):
+        k = 0.01
         self.pos = pos
         self.colour_name = colour_name  # colour_name like orange, pine_green... translate to RGB tuple by using utils.
         self.height = height
         self.width = width
         self.heat_capacity = float(heat_capacity)
-        self.init_temperature = float(init_temperature)  # all the items are having same initial temperature
+        self.item_temperature = float(item_temperature)  # all the items are having same initial temperature
+        self.mass = self.height * self.width * k
 
     def get_image(self):
         h = int(self.height)
@@ -58,8 +60,10 @@ class Item:
     def set_colour(self, colour_name):
         self.colour_name = colour_name
 
-    def get_thermal_value(self, temperature):
-        return self.heat_capacity * temperature
+    def get_updated_temperature(self, env_temperature):
+        temp_diff = (float(env_temperature) - self.item_temperature) / (self.mass * self.heat_capacity)
+        self.item_temperature += temp_diff
+        return self.item_temperature
 
 
 class Tree(Item):
@@ -233,21 +237,29 @@ class Block:
 
         return rgb_grid
 
-    def generate_thermal_image(self):
-        thermal_grid = np.zeros((self.size, self.size))  # 2d grid
+    def generate_thermal_image(self, env_temperature):
+        thermal_grid = np.full((self.size, self.size), 15, dtype=np.float32)  # 2d grid
 
         for item in self.items:
             topleft = item.get_topleft()
-            ...
+            item_temp = item.get_updated_temperature(env_temperature)
+
+            cx_start = max(0, int(topleft[0]))
+            ry_start = max(0, int(topleft[1]))
+            cx_stop = min(self.size, int(cx_start + item.get_width()))
+            ry_stop = min(self.size, int(ry_start + item.get_height()))
+
+            thermal_grid[ry_start:ry_stop, cx_start:cx_stop] = item_temp
+
+        return thermal_grid
 
     def __str__(self):
         return f"Block: {self.topleft}, #items = {len(self.items)}"
 
 
 class Map:
-    def __init__(self, rgb_blocks, thermal_blocks, map_config, temperature_daytime_list):
-        self.rgb_blocks = rgb_blocks
-        self.thermal_blocks = thermal_blocks
+    def __init__(self, blocks, map_config, temperature_daytime_list):
+        self.blocks = blocks
 
         # map structure properties
         self.block_size = map_config['block_size']
@@ -268,14 +280,12 @@ class Map:
         for i in range(self.block_row_num):
             for j in range(self.block_col_num):
                 field = field_type_choices.pop()
-                self.rgb_blocks.append(Block(self.block_size, ((j * self.block_size), (i * self.block_size)), field))
-                self.thermal_blocks.append(
-                    Block(self.block_size, ((j * self.block_size), (i * self.block_size)), field))
+                self.blocks.append(Block(self.block_size, ((j * self.block_size), (i * self.block_size)), field))
 
-    def generate_rgb_view(self, rgb_blocks):
+    def generate_rgb_view(self, blocks):
         map_image = np.zeros((self.map_shape[0] * self.block_size, self.map_shape[1] * self.block_size, 3),
                              dtype=np.uint8)
-        for block in rgb_blocks:
+        for block in blocks:
             block_img = block.generate_block_image()
             topleft = block.get_topleft()
 
@@ -285,8 +295,17 @@ class Map:
             map_image[y_start:y_end, x_start:x_end, :] = block_img
         return map_image
 
-    def generate_thermal_view(self):
-        map_area = []
+    def generate_thermal_view(self, env_temperature):
+        thermal_image = np.zeros((self.map_shape[0] * self.block_size, self.map_shape[1] * self.block_size), dtype=np.float32)
+
         for block in self.blocks:
-            map_area.append(block.generate_thermal_image())
-        return np.array(map_area)
+            block_img = block.generate_thermal_image(env_temperature)
+            topleft = block.get_topleft()
+
+            x_start, y_start = topleft
+            x_end = x_start + block_img.shape[1]
+            y_end = y_start + block_img.shape[0]
+            thermal_image[y_start:y_end, x_start:x_end] = block_img
+
+        return thermal_image
+

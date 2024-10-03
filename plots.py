@@ -15,15 +15,14 @@ def main():
     temperature_daytime = get_temperature_daytime(read_from_csv("config/temperature_daytime.csv"))
 
     # create a list to hold all the blocks
-    rgb_blocks = []
-    thermal_blocks = []
-    plots_map = Map(rgb_blocks, thermal_blocks, map_config, temperature_daytime)
+    blocks = []
+    plots_map = Map(blocks, map_config, temperature_daytime)
 
     plots_map.generate_map_structure()
 
     # Start to add rgb blocks based on configuration
     # Add items to blocks in the sequence of road, house (if on field_type 'yard') and trees.
-    for block in rgb_blocks:
+    for block in blocks:
         if block.field_type == 'park':
             # if it is park, add roads and more trees
             block.add_road(1, 1)
@@ -34,9 +33,22 @@ def main():
             block.add_house(4, 6)
             block.add_trees(block.field_type)
 
-    plt.imshow(plots_map.generate_rgb_view(rgb_blocks))
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5))
+    ax1.imshow(plots_map.generate_rgb_view(blocks))
+    ax1.set_title("RGB view")
 
-    plt.title("Task 4: (2,3) grid of blocks with houses and trees")
+    # initial
+    thermal_view = plots_map.generate_thermal_view(temperature_daytime[0])
+    cax = ax2.imshow(thermal_view, cmap='hot', vmin=10, vmax=40)
+    ax2.set_title(f"Thermal View at {temperature_daytime[0]}")
+    fig.colorbar(cax, ax=ax2)
+
+    for hour, temp in enumerate(temperature_daytime):
+        thermal_view = plots_map.generate_thermal_view(temp)
+        cax.set_data(thermal_view)
+        ax2.set_title(f"Thermal View at {temp}")
+        plt.pause(1)
+
     plt.show()
 
 
