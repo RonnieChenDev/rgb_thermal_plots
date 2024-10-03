@@ -251,7 +251,8 @@ class Map:
             for j in range(self.block_col_num):
                 field = field_type_choices.pop()
                 self.rgb_blocks.append(Block(self.block_size, ((j * self.block_size), (i * self.block_size)), field))
-                self.thermal_blocks.append(Block(self.block_size, ((j * self.block_size), (i * self.block_size)), field))
+                self.thermal_blocks.append(
+                    Block(self.block_size, ((j * self.block_size), (i * self.block_size)), field))
 
     def generate_rgb_view(self, rgb_blocks):
         map_image = np.zeros((self.map_shape[0] * self.block_size, self.map_shape[1] * self.block_size, 3),

@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from canopy import *
 from utils import *
+
 matplotlib.use('Qt5Agg')
 
 
