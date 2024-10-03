@@ -8,6 +8,8 @@ matplotlib.use('Qt5Agg')
 
 
 def main():
+    # TODO: test code
+
     # get map config
     map_config = get_map_config(read_from_csv("config/map_configuration.csv"))
 
@@ -19,7 +21,7 @@ def main():
     plots_map.generate_map_structure()
 
     # Start to add rgb blocks based on configuration
-    # Add items to blocks
+    # Add items to blocks in the sequence of road, house (if on field_type 'yard') and trees.
     for block in rgb_blocks:
         if block.field_type == 'park':
             # if it is park, add roads and more trees
