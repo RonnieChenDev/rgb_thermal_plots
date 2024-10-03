@@ -21,7 +21,7 @@ matplotlib.use('TKAgg')
 
 class Item:
     def __init__(self, pos, colour_name, height, width, heat_capacity, item_temperature=15):
-        k = 0.01
+        k = 1
         self.pos = pos
         self.colour_name = colour_name  # colour_name like orange, pine_green... translate to RGB tuple by using utils.
         self.height = height
@@ -61,14 +61,14 @@ class Item:
         self.colour_name = colour_name
 
     def get_updated_temperature(self, env_temperature):
-        temp_diff = (float(env_temperature) - self.item_temperature) / (self.mass * self.heat_capacity)
+        temp_diff = 2 * (float(env_temperature) - self.item_temperature) / (self.mass * self.heat_capacity)
         self.item_temperature += temp_diff
         return self.item_temperature
 
 
 class Tree(Item):
 
-    def __init__(self, pos, height, width, heat_capacity=4.0, colour_name='pine_green'):
+    def __init__(self, pos, height, width, heat_capacity=4.5, colour_name='pine_green'):
         super().__init__(pos, colour_name, height, width, heat_capacity)
 
     def __str__(self):
@@ -77,7 +77,7 @@ class Tree(Item):
 
 class House(Item):
 
-    def __init__(self, pos, height, width, heat_capacity=2, colour_name='orange'):
+    def __init__(self, pos, height, width, heat_capacity=3, colour_name='orange'):
         super().__init__(pos, colour_name, height, width, heat_capacity)
 
     def __str__(self):

@@ -1,8 +1,3 @@
-import numpy as np
-import random
-from canopy import *
-
-
 # return the content in the file, in list. Figures are transferred from string to integer.
 def read_from_csv(file_path):
     with open(file_path) as fp:
