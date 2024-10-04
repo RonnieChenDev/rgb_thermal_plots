@@ -39,19 +39,30 @@ def main():
     ax1.set_title("RGB view")
 
     # initial
-    thermal_view = plots_map.generate_thermal_view(temperature_daytime[0])
-    cax = ax2.imshow(thermal_view, cmap='hot', vmin=10, vmax=60)
+    thermal_view, avg_temps, topleft_locs = plots_map.generate_thermal_view(temperature_daytime[0])
+    cax = ax2.imshow(thermal_view, cmap='hot', vmin=10, vmax=50)
     ax2.set_title(f"Thermal View at {temperature_daytime[0]}")
     fig.colorbar(cax, ax=ax2, shrink=0.6)
 
     for hour, temp in enumerate(temperature_daytime):
-        thermal_view = plots_map.generate_thermal_view(temp)
+        thermal_view, avg_temps, topleft_locs = plots_map.generate_thermal_view(temp)
         cax.set_data(thermal_view)
         if hour < 16:
             current_hour = hour + 8
         else:
             current_hour = hour + 8 - 24
+
         ax2.set_title(f"Thermal View at {temp} °C, time at hour {current_hour}")
+
+        # clear the text if any
+        for txt in ax2.texts:
+            txt.remove()
+        # avg temperature print
+        for index, temp in enumerate(avg_temps):
+            x, y = topleft_locs[index]
+            # move text a little downwards
+            ax2.text(x, (y+1), f'{temp:.1f}')
+
         plt.pause(1)
 
     plt.show()

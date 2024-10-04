@@ -61,7 +61,8 @@ class Item:
         self.colour_name = colour_name
 
     def get_updated_temperature(self, env_temperature):
-        temp_diff = 2 * (float(env_temperature) - self.item_temperature) / (self.mass * self.heat_capacity)
+        n = 2
+        temp_diff = 2 * (float(env_temperature) - self.item_temperature) / (self.mass * self.heat_capacity * n)
         self.item_temperature += temp_diff
         return self.item_temperature
 
@@ -70,6 +71,8 @@ class Tree(Item):
 
     def __init__(self, pos, height, width, heat_capacity=4.5, colour_name='pine_green'):
         super().__init__(pos, colour_name, height, width, heat_capacity)
+        # add more weight for trees' mass than roads, to make the color differ.
+        self.mass = self.height * self.width
 
     def __str__(self):
         return f"Tree: {self.pos}"
@@ -87,6 +90,7 @@ class House(Item):
 class Road(Item):
     def __init__(self, pos, colour_name, heat_capacity, height, width):
         super().__init__(pos, colour_name, heat_capacity, height, width)
+        self.mass = self.height * self.width * 4
 
     def __str__(self):
         return f"Road: {self.pos}"
@@ -250,8 +254,24 @@ class Block:
             ry_stop = min(self.size, int(ry_start + item.get_height()))
 
             thermal_grid[ry_start:ry_stop, cx_start:cx_stop] = item_temp
+            avg_temp = self.calc_avg_temp()
 
-        return thermal_grid
+        print(f"Thermal grid type: {type(thermal_grid)}, shape: {thermal_grid.shape}")
+
+        return thermal_grid, avg_temp
+
+    def calc_avg_temp(self):
+        mass_total = 0
+        weighted_temp_total = 0
+
+        for item in self.items:
+            mass_total += item.mass
+            weighted_temp_total += item.item_temperature * item.mass
+
+        if mass_total != 0:
+            return weighted_temp_total / mass_total
+        else:
+            return 0
 
     def __str__(self):
         return f"Block: {self.topleft}, #items = {len(self.items)}"
@@ -298,9 +318,11 @@ class Map:
     def generate_thermal_view(self, env_temperature):
         thermal_image = np.zeros((self.map_shape[0] * self.block_size, self.map_shape[1] * self.block_size),
                                  dtype=np.float32)
+        avg_temps = []
+        topleft_locs = []
 
         for block in self.blocks:
-            block_img = block.generate_thermal_image(env_temperature)
+            block_img, avg_temp = block.generate_thermal_image(env_temperature)
             topleft = block.get_topleft()
 
             x_start, y_start = topleft
@@ -308,4 +330,9 @@ class Map:
             y_end = y_start + block_img.shape[0]
             thermal_image[y_start:y_end, x_start:x_end] = block_img
 
-        return thermal_image
+            avg_temps.append(avg_temp)
+            topleft_locs.append(block.topleft)
+
+        print(f"Final thermal_image shape: {thermal_image.shape}")
+
+        return thermal_image, avg_temps, topleft_locs
