@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from canopy import *
 from utils import *
+import time
 
 matplotlib.use('Qt5Agg')
 
@@ -8,14 +9,14 @@ matplotlib.use('Qt5Agg')
 def main():
     map_config_list = []
 
-    # prompt to ask which scenario to simulate with, and if need manual input or not.
+    # prompt to ask which scenario to simulate with, and require manual input or not.
     print("Welcome to the thermal simulation system! \n")
     print("Would you like to do the simulation?")
     user_selected_system_action = -1
-    system_options = ['Simulation(s)', 'Quit(q)']
+    system_options = ['Start simulation', 'Quit']
     user_selected_system_action = option_list_loop(user_selected_system_action, system_options)
 
-    if user_selected_system_action == 0:
+    while user_selected_system_action == 0:
         print("Please select a scenario to simulate with: \n")
         scenario_options = ['high temperature', 'low temperature', 'continuously changing temperature']
         user_selected_scenario = -1
@@ -121,8 +122,12 @@ def main():
 
         plt.show()
 
-    else:
-        print("Thank you for using the system, bye!")
+        # ask for the system option again
+        next_user_selected_system_action = -1
+        next_user_selected_system_action = option_list_loop(next_user_selected_system_action, system_options)
+        if next_user_selected_system_action == 1:
+            print("Thank you for using the system, bye!")
+            user_selected_system_action = 1
 
 
 if __name__ == "__main__":
