@@ -17,7 +17,7 @@ math
 25/09/2024 - initial version of Assignment programs
 26/09/2024 - add Road and Map classes, add Item as parent class of Tree, House and Road; read from file functionality
 27/09/2024 - modify image handling from 2d to 3d (rgb)
-28/09/2024 - add_road, add_house method
+28/09/2024 - add_road, add_house, add_tree method
 03/10/2024 - add utils to extract fields from file content; add method to generate map structure;
  fix the issue of items overlapping each other; add thermal view
 04/10/2024 - adjust plots size
