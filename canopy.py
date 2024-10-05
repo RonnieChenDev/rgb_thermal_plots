@@ -4,11 +4,6 @@ canopy.py - module of files for canopy simulations
 Student Name: Xi CHEN
 Student ID  : 22278096
 
-Version History:
-    - 9/11/24 - original version released (temp_basecode.zip)
-    - 11/9/24 - extended version released for tasks 3 & 4
-    - 13/9/24 - add House class for PracTest3
-    - 27/9/24 - modify the image generation from 1d image to 3d rgb image
 """
 import random
 import numpy as np
@@ -202,9 +197,9 @@ class Block:
     def add_trees(self, field_type):
         quantity_of_trees = 0
         if field_type == 'park':
-            quantity_of_trees = random.randint(25, 30)
+            quantity_of_trees = random.randint(70, 80)
         elif field_type == 'yard':
-            quantity_of_trees = random.randint(15, 20)
+            quantity_of_trees = random.randint(5, 10)
         trees_points = []
         for _ in range(quantity_of_trees):
             tree_x = random.randint(0, self.size - 1)
@@ -232,14 +227,14 @@ class Block:
             img_height = ry_stop - ry_start
             img_width = cx_stop - cx_start
 
-            print(f"Topleft: {topleft}, img shape: {img.shape}, grid shape: {rgb_grid.shape}")
-            print(f"Placing image from ({ry_start}:{ry_stop}, {cx_start}:{cx_stop})")
+            # print(f"Topleft: {topleft}, img shape: {img.shape}, grid shape: {rgb_grid.shape}")
+            # print(f"Placing image from ({ry_start}:{ry_stop}, {cx_start}:{cx_stop})")
 
             if img_height > 0 and img_width > 0:
-                rgb_grid[ry_start:ry_stop, cx_start:cx_stop, :] = img[:img_height, :img_width,
-                                                                  :]  # overlay item on grid
-            else:
-                print(f"Invalid slice: start ({cx_start}, {ry_start}), stop ({cx_stop}, {ry_stop})")
+                # overlay item on grid
+                rgb_grid[ry_start:ry_stop, cx_start:cx_stop, :] = img[:img_height, :img_width, :]
+            # else:
+                # print(f"Invalid slice: start ({cx_start}, {ry_start}), stop ({cx_stop}, {ry_stop})")
 
         return rgb_grid
 
@@ -258,7 +253,7 @@ class Block:
             thermal_grid[ry_start:ry_stop, cx_start:cx_stop] = item_temp
             avg_temp = self.calc_avg_temp()
 
-        print(f"Thermal grid type: {type(thermal_grid)}, shape: {thermal_grid.shape}")
+        # print(f"Thermal grid type: {type(thermal_grid)}, shape: {thermal_grid.shape}")
 
         return thermal_grid, avg_temp
 
@@ -335,6 +330,6 @@ class Map:
             avg_temps.append(avg_temp)
             topleft_locs.append(block.topleft)
 
-        print(f"Final thermal_image shape: {thermal_image.shape}")
+        # print(f"Final thermal_image shape: {thermal_image.shape}")
 
         return thermal_image, avg_temps, topleft_locs

@@ -1,3 +1,6 @@
+import numpy as np
+
+
 # return the content in the file, in list. Figures are transferred from string to integer.
 def read_from_csv(file_path):
     with open(file_path) as fp:
@@ -38,6 +41,20 @@ def get_map_config(map_config_content_list):
     return map_config
 
 
-def get_temperature_daytime(temperature_daytime_content_list):
-    temperature_list = temperature_daytime_content_list[0]
+def get_temperature_daytime(temperature_daytime_content_list, scenario_index):
+    temperature_list = temperature_daytime_content_list[scenario_index]
     return temperature_list
+
+
+# loop until get a valid select
+def option_list_loop(user_selected_option, option_list):
+    for i, option in enumerate(option_list):
+        print(f'{i}, {option}')
+    while user_selected_option == -1:
+        user_input = int(input("Please enter your option:"))
+        if user_input not in np.arange(len(option_list)):
+            print("No such option. Please re-enter!")
+        else:
+            user_selected_option = user_input
+
+    return user_selected_option
