@@ -1,8 +1,8 @@
 """
-canopy.py - module of files for canopy simulations
+    canopy.py - module of files for canopy simulations
 
-Student Name: Xi CHEN
-Student ID  : 22278096
+    Student Name: Xi CHEN
+    Student ID  : 22278096
 """
 import random
 import matplotlib
@@ -23,19 +23,29 @@ class Item:
         self.mass = self.height * self.width
 
     def get_image(self):
+        """
+        Generate each item image with RGB value in np list.
+        :return: img
+        """
         h = int(self.height)
         w = int(self.width)
         img = np.ones((h, w, 3), dtype=np.uint8) * get_rgb_colour(self.colour_name)  # 3D RGB
         return img
 
     def get_coord(self):
-        # central point coord of the item
+        """
+        Get central point coord of the item.
+        :return: pos
+        """
         return self.pos
 
     def get_topleft(self):
-        # While handling image, y-axis starting from 0 at the top of the image, instead of bottom.
-        # X-axis starting from zero from left.
-        # Top_left coord is not accurate when width or height is odd, as coord requires integer inputs.
+        """
+        While handling image, y-axis starting from 0 at the top of the image, instead of bottom.
+        X-axis starting from zero from left.
+        Top_left coord is not accurate when width or height is odd, as coord requires integer inputs.
+        :return: topleft coord of item
+        """
         xleft = math.ceil(self.pos[0] - self.width / 2)
         ytop = math.ceil(self.pos[1] - self.height / 2)
         return xleft, ytop
@@ -53,6 +63,12 @@ class Item:
         self.colour_name = colour_name
 
     def get_updated_temperature(self, env_temperature):
+        """
+        Calculate updated temperature of item based on mass, environment temperature,
+        item current temperature and heat capacity of the item. n controls if it looks smooth in the plots.
+        :param env_temperature:
+        :return: updated item temperature
+        """
         n = 2
         temp_diff = 2 * (float(env_temperature) - self.item_temperature) / (self.mass * self.heat_capacity * n)
         self.item_temperature += temp_diff
@@ -114,19 +130,43 @@ class Block:
         return self.topleft
 
     def is_occupied(self, x, y):
+        """
+        Validate if the input coord is already in use.
+        :param x:
+        :param y:
+        :return: flag of judging if it is already occupied
+        """
         return self.occupied_loc[y, x]
 
     def bulk_mark_as_occupied(self, points):
+        """
+        Mark points as occupied in bulk.
+        :param points:
+        :return:
+        """
         for x, y in points:
             self.occupied_loc[y, x] = True
 
     def mark_as_occupied(self, x, y):
+        """
+        Mark a point as occupied independently.
+        :param x:
+        :param y:
+        :return:
+        """
         self.occupied_loc[y, x] = True
 
     def add_item(self, item):
         self.items.append(item)
 
     def add_road(self, road_height, road_width):
+        """
+        Add road to a block. Road consists of several Road objects in a horizontal or vertical line.
+        No need to check occupied status for their coord before adding tp block as it should always invoke firstly.
+        :param road_height:
+        :param road_width:
+        :return:
+        """
         # make sure the start point is at the left top corner
         start_point = (random.randint(2, self.size // 2), random.randint(2, self.size // 2))
         points = []
@@ -135,6 +175,7 @@ class Block:
         # random to get True or False
         if random.randint(1, 10) > 5:
             # horizontal line
+            # make sure it will not go over the boundary.
             for x in range(start_point[0], min(start_point[0] + random.randint(5, 15), self.size - 1)):
                 points.append((x, start_point[1]))
                 # consider road width is 1 and mark the whole points in a road
@@ -166,6 +207,12 @@ class Block:
                                  f"The expected value is either 'park' or 'yard'.")
 
     def add_house(self, house_height, house_width):
+        """
+        Add house to a block. Need check for coord is occupied or not before adding.
+        :param house_height:
+        :param house_width:
+        :return:
+        """
         # central coord of house item
         house_x = 0
         house_y = 0
@@ -193,6 +240,12 @@ class Block:
         self.add_item(House(pos=(house_x, house_y), height=house_height, width=house_width))
 
     def add_trees(self, field_type):
+        """
+        Add trees to a block. Need check for coord is occupied or not before adding.
+        Quantity of trees differ while in a park or a yard.
+        :param field_type:
+        :return:
+        """
         quantity_of_trees = 0
         if field_type == 'park':
             quantity_of_trees = random.randint(70, 80)
@@ -211,6 +264,10 @@ class Block:
             self.add_item(Tree(pos=tree, height=1, width=1))
 
     def generate_block_image(self):
+        """
+        Generate rgb image of a block
+        :return: rgb grid in a block
+        """
         bg_rgb_colour = get_rgb_colour(self.block_bg_color)
         rgb_grid = np.ones((self.size, self.size, 3), dtype=np.uint8) * bg_rgb_colour  # 3D RGB grid, preset bg colour
 
@@ -237,8 +294,13 @@ class Block:
         return rgb_grid
 
     def generate_thermal_image(self, env_temperature):
+        """
+        Generate thermal image of a block
+        :param env_temperature:
+        :return: thermal_grid for a block, average temperature in this block (based on all items)
+        """
         thermal_grid = np.full((self.size, self.size), 15, dtype=np.float32)  # 2d grid
-
+        avg_temp = []
         for item in self.items:
             topleft = item.get_topleft()
             item_temp = item.get_updated_temperature(env_temperature)
@@ -256,6 +318,10 @@ class Block:
         return thermal_grid, avg_temp
 
     def calc_avg_temp(self):
+        """
+        Calculate the average temperature of items.
+        :return:
+        """
         mass_total = 0
         weighted_temp_total = 0
 
@@ -287,9 +353,12 @@ class Map:
         # thermal: daytime temperature list over 12 hours
         self.temperature_daytime_list = temperature_daytime_list
 
-    # generate blocks with park or yard field type based on park_limit
-    # rgb and thermal view share the same map structure
     def generate_map_structure(self):
+        """
+        generate blocks with park or yard field type based on park_limit
+        rgb and thermal view share the same map structure
+        :return:
+        """
         field_type_choices = ['park'] * self.park_limit + ['yard'] * (self.block_num - self.park_limit)
         random.shuffle(field_type_choices)
         for i in range(self.block_row_num):
@@ -298,6 +367,11 @@ class Map:
                 self.blocks.append(Block(self.block_size, ((j * self.block_size), (i * self.block_size)), field))
 
     def generate_rgb_view(self, blocks):
+        """
+        Generate rgb view for all blocks.
+        :param blocks:
+        :return: rgb view of the map
+        """
         map_image = np.zeros((self.map_shape[0] * self.block_size, self.map_shape[1] * self.block_size, 3),
                              dtype=np.uint8)
         for block in blocks:
@@ -311,6 +385,11 @@ class Map:
         return map_image
 
     def generate_thermal_view(self, env_temperature):
+        """
+            Generate thermal view for all blocks.
+            :param blocks:
+            :return: thermal view of the map
+        """
         thermal_image = np.zeros((self.map_shape[0] * self.block_size, self.map_shape[1] * self.block_size),
                                  dtype=np.float32)
         avg_temps = []

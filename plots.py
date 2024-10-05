@@ -7,10 +7,8 @@ matplotlib.use('Qt5Agg')
 
 def main():
     map_config_list = []
-    map_config = {}
-    env_temp = []
 
-    # ask for input from keyboard, which scenario to simulate with.
+    # prompt to ask which scenario to simulate with, and if need manual input or not.
     print("Welcome to the thermal simulation system! \n")
     print("Would you like to do the simulation?")
     user_selected_system_action = -1
@@ -114,10 +112,10 @@ def main():
             for txt in ax2.texts:
                 txt.remove()
             # avg temperature print
-            for index, temp in enumerate(avg_temps):
+            for index, avg_temp in enumerate(avg_temps):
                 x, y = topleft_locs[index]
                 # move text a little downwards
-                ax2.text(x, (y + 1), f'{temp:.1f}', color='white')
+                ax2.text(x, (y + 1), f'{avg_temp:.1f}', color='white')
 
             plt.pause(1)
 
