@@ -18,30 +18,30 @@ def main():
     user_selected_system_action = option_list_loop(user_selected_system_action, system_options)
 
     while user_selected_system_action == 0:
-        print("Please select a scenario to simulate with: \n")
+        print("\nPlease select a scenario to simulate with:")
         scenario_options = ['high temperature', 'low temperature', 'continuously changing temperature']
         user_selected_scenario = -1
         user_selected_scenario = option_list_loop(user_selected_scenario, scenario_options)
 
-        print("Thank you! Now some information of map is required from you. \n")
+        print("\nThank you! Now some information of map is required from you.")
         print("Would you like to input by yourself or using the content in config and temperature file?")
         user_selected_input_mode = -1
         input_modes = ['input by myself', 'use files directly']
         user_selected_input_mode = option_list_loop(user_selected_input_mode, input_modes)
 
         if user_selected_input_mode == 0:
-            print("Please enter map config. \n")
+            print("\nPlease enter map config.")
             # assume user's input is float numbers. Simply decide on length of input.
             while len(map_config_list) != 4:
-                map_input = input("Sequence is quantity of blocks in row and column, block size, park percentage, "
-                                  "separating with ',':")
+                map_input = input("Sequence is quantity of block rows, quantity of block columns, block size and "
+                                  "park percentage, separating with ',':")
                 map_config_list = map_input.split(',')
                 if len(map_config_list) != 4:
-                    print("Invalid quantity of params, please re-enter!")
+                    print("Invalid quantity of params, please re-enter! \n")
 
             map_config_list = [float(i) for i in map_config_list]
             # keys = ['block_size', 'block_row_num', 'block_col_num', 'block_num', 'map_shape', 'park_limit']
-            # park limit need transform from percentage to fix nunber
+            # park limit need transform from percentage to a fixed quantity
             block_num = int(map_config_list[0]) * int(map_config_list[1])
             map_shape = (int(map_config_list[0]), int(map_config_list[1]))
             park_limit = round(float(map_config_list[3]) * block_num)
@@ -50,15 +50,15 @@ def main():
                           "block_col_num": int(map_config_list[1]), "block_num": block_num,
                           "map_shape": map_shape, "park_limit": park_limit}
 
-            print("Thank you! Then do you want to input the temperature to simulate with on your own? \n")
-            temperature_option = input("Please type in y or n: \n")
+            print("\nThank you! Then do you want to input the temperature to simulate with on your own? \n")
+            temperature_option = input("Please type in y or n:")
             if temperature_option.lower() == 'y':
                 if user_selected_scenario == 0 or user_selected_scenario == 1:
-                    env_temp_for_generate_list = float(input("Please enter the temperature using integer "
+                    env_temp_for_generate_list = float(input("\nPlease enter the temperature using integer "
                                                              "between 0 and 45: "))
                     env_temp = [env_temp_for_generate_list] * 24
                 else:
-                    env_temp_string = input("Please enter the temperature using integer between 0 and 45, "
+                    env_temp_string = input("\nPlease enter the temperature using integer between 0 and 45, "
                                             "split with ',': ")
                     env_temp = env_temp_string.split(',')
             else:
@@ -127,7 +127,7 @@ def main():
         next_user_selected_system_action = -1
         next_user_selected_system_action = option_list_loop(next_user_selected_system_action, system_options)
         if next_user_selected_system_action == 1:
-            print("Thank you for using the system, bye!")
+            print("\nThank you for using the system, bye!")
             user_selected_system_action = 1
 
 

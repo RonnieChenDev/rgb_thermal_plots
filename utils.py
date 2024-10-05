@@ -43,7 +43,7 @@ def get_map_config(map_config_content_list):
     :param: map_config_content_list:
     :return: map_config map
     """
-    if len(map_config_content_list) != 4:
+    if len(map_config_content_list[0]) != 4:
         return {}
     else:
         try:
@@ -88,7 +88,7 @@ def option_list_loop(user_selected_option, option_list):
     for i, option in enumerate(option_list):
         print(f'{i}, {option}')
     while user_selected_option == -1:
-        user_input = int(input("Please enter your option:"))
+        user_input = int(input("\nPlease enter your option:"))
         if user_input not in np.arange(len(option_list)):
             print("No such option. Please re-enter!")
         else:
