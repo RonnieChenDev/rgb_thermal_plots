@@ -5,8 +5,13 @@ Assignment of Fundamentals of Programming COMP5005
 README - readme file for assignment
 canopy.py - add classes and method to the class definitions from PracTest3
 
+
 ## Dependencies
 canopy.py - add classes and method to the class definitions from PracTest3
+numpy
+random
+matplotlib
+math
 
 ## Version information
 25/09/2024 - initial version of Assignment programs
