@@ -3,10 +3,18 @@ Assignment of Fundamentals of Programming COMP5005
 
 ## Contents
 README - readme file for assignment
-canopy.py - class definitions from PracTest3
+canopy.py - add classes and method to the class definitions from PracTest3
 
 ## Dependencies
-canopy.py - class definitions from PracTest3
+canopy.py - add classes and method to the class definitions from PracTest3
 
 ## Version information
 25/09/2024 - initial version of Assignment programs
+26/09/2024 - add Road and Map classes, add Item as parent class of Tree, House and Road; read from file functionality
+27/09/2024 - modify image handling from 2d to 3d (rgb)
+28/09/2024 - add_road, add_house method
+03/10/2024 - add utils to extract fields from file content; add method to generate map structure;
+ fix the issue of items overlapping each other; add thermal view
+04/10/2024 - adjust plots size
+05/10/2024 - add average temperature calculation and show on thermal view;
+ adjust params to ensure effect of plots over time changing period; add prompt to add flexibility (use input or files)
