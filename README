@@ -22,4 +22,5 @@ math
  fix the issue of items overlapping each other; add thermal view
 04/10/2024 - adjust plots size and align to colorbar
 05/10/2024 - add average temperature calculation and show on thermal view;
- adjust params to ensure effect of plots over time changing period; add prompt to add flexibility (use input or files)
+ adjust params to ensure effect of plots over time changing period; add prompt to add flexibility (use input or files);
+ add shell files for automation inputs
