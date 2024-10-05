@@ -234,7 +234,7 @@ class Block:
                 # overlay item on grid
                 rgb_grid[ry_start:ry_stop, cx_start:cx_stop, :] = img[:img_height, :img_width, :]
             # else:
-                # print(f"Invalid slice: start ({cx_start}, {ry_start}), stop ({cx_stop}, {ry_stop})")
+            # print(f"Invalid slice: start ({cx_start}, {ry_start}), stop ({cx_stop}, {ry_stop})")
 
         return rgb_grid
 

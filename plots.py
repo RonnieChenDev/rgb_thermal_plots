@@ -62,7 +62,8 @@ def main():
                                             "split with ',': ")
                     env_temp = env_temp_string.split(',')
             else:
-                env_temp = get_temperature_daytime(read_from_csv("config/temperature_daytime.csv"), user_selected_scenario)
+                env_temp = get_temperature_daytime(read_from_csv("config/temperature_daytime.csv"),
+                                                   user_selected_scenario)
         else:
             map_config = get_map_config(read_from_csv("config/map_configuration.csv"))
             env_temp = get_temperature_daytime(read_from_csv("config/temperature_daytime.csv"), user_selected_scenario)
