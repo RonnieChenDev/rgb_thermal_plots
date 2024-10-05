@@ -61,7 +61,7 @@ def main():
         for index, temp in enumerate(avg_temps):
             x, y = topleft_locs[index]
             # move text a little downwards
-            ax2.text(x, (y + 1), f'{temp:.1f}')
+            ax2.text(x, (y + 1), f'{temp:.1f}', color='white')
 
         plt.pause(1)
 

@@ -21,14 +21,13 @@ matplotlib.use('TKAgg')
 
 class Item:
     def __init__(self, pos, colour_name, height, width, heat_capacity, item_temperature=15):
-        k = 1
         self.pos = pos
         self.colour_name = colour_name  # colour_name like orange, pine_green... translate to RGB tuple by using utils.
         self.height = height
         self.width = width
         self.heat_capacity = float(heat_capacity)
         self.item_temperature = float(item_temperature)  # all the items are having same initial temperature
-        self.mass = self.height * self.width * k
+        self.mass = self.height * self.width
 
     def get_image(self):
         h = int(self.height)
@@ -71,8 +70,8 @@ class Tree(Item):
 
     def __init__(self, pos, height, width, heat_capacity=4.5, colour_name='pine_green'):
         super().__init__(pos, colour_name, height, width, heat_capacity)
-        # add more weight for trees' mass than roads, to make the color differ.
-        self.mass = self.height * self.width
+        # add more weight for trees' mass.
+        self.mass = self.height * self.width * 2.5
 
     def __str__(self):
         return f"Tree: {self.pos}"
@@ -82,6 +81,8 @@ class House(Item):
 
     def __init__(self, pos, height, width, heat_capacity=3, colour_name='orange'):
         super().__init__(pos, colour_name, height, width, heat_capacity)
+        # decrease weight for house, more than road
+        self.mass = self.height * self.width * 0.3
 
     def __str__(self):
         return f"House: {self.pos}"
@@ -90,7 +91,8 @@ class House(Item):
 class Road(Item):
     def __init__(self, pos, colour_name, heat_capacity, height, width):
         super().__init__(pos, colour_name, heat_capacity, height, width)
-        self.mass = self.height * self.width * 4
+        # decrease weight for roads
+        self.mass = self.height * self.width * 0.8
 
     def __str__(self):
         return f"Road: {self.pos}"
