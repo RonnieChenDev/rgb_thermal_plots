@@ -3,10 +3,8 @@ canopy.py - module of files for canopy simulations
 
 Student Name: Xi CHEN
 Student ID  : 22278096
-
 """
 import random
-import numpy as np
 import matplotlib
 from utils import *
 import math
