@@ -9,12 +9,15 @@ def read_from_csv(file_path):
     :param: file_path
     :return: file_content
     """
-    with open(file_path) as fp:
-        file_content = []
-        for line in fp.readlines()[1:]:
-            file_content.append(line.split(','))
+    try:
+        with open(file_path) as fp:
+            file_content = []
+            for line in fp.readlines()[1:]:
+                file_content.append(line.split(','))
+            return file_content
 
-        return file_content
+    except FileNotFoundError as e:
+        raise RuntimeError(f"Failed to find the target file. {e}")
 
 
 def get_rgb_colour(colour_name):
@@ -40,19 +43,25 @@ def get_map_config(map_config_content_list):
     :param: map_config_content_list:
     :return: map_config map
     """
-    block_size = int(map_config_content_list[0][2])
-    block_row_num = int(map_config_content_list[0][0])
-    block_col_num = int(map_config_content_list[0][1])
-    block_num = block_row_num * block_col_num
-    map_shape = (block_row_num, block_col_num)
+    if len(map_config_content_list) != 4:
+        return {}
+    else:
+        try:
+            block_size = int(map_config_content_list[0][2])
+            block_row_num = int(map_config_content_list[0][0])
+            block_col_num = int(map_config_content_list[0][1])
+            block_num = block_row_num * block_col_num
+            map_shape = (block_row_num, block_col_num)
 
-    # total of blocks * percentage of park area
-    park_limit = round(float(map_config_content_list[0][3]) * block_num)
+            # total of blocks * percentage of park area
+            park_limit = round(float(map_config_content_list[0][3]) * block_num)
 
-    map_config = {"block_size": block_size, "block_row_num": block_row_num, "block_col_num": block_col_num,
-                  "block_num": block_num, "map_shape": map_shape, "park_limit": park_limit}
+            map_config = {"block_size": block_size, "block_row_num": block_row_num, "block_col_num": block_col_num,
+                          "block_num": block_num, "map_shape": map_shape, "park_limit": park_limit}
 
-    return map_config
+            return map_config
+        except ValueError as e:
+            raise ValueError(f"Values from map config file are not correct, please check! {e}")
 
 
 def get_temperature_daytime(temperature_daytime_content_list, scenario_index):
@@ -62,8 +71,11 @@ def get_temperature_daytime(temperature_daytime_content_list, scenario_index):
     :param scenario_index:
     :return: temperature_list
     """
-    temperature_list = temperature_daytime_content_list[scenario_index]
-    return temperature_list
+    if len(temperature_daytime_content_list) != 3:
+        return []
+    else:
+        temperature_list = temperature_daytime_content_list[scenario_index]
+        return temperature_list
 
 
 def option_list_loop(user_selected_option, option_list):

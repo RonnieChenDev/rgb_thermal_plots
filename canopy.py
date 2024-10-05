@@ -70,9 +70,15 @@ class Item:
         :return: updated item temperature
         """
         n = 2
-        temp_diff = 2 * (float(env_temperature) - self.item_temperature) / (self.mass * self.heat_capacity * n)
-        self.item_temperature += temp_diff
-        return self.item_temperature
+        try:
+            temp_diff = 2 * (float(env_temperature) - self.item_temperature) / (self.mass * self.heat_capacity * n)
+            self.item_temperature += temp_diff
+            return self.item_temperature
+        except (ValueError, ZeroDivisionError) as e:
+            if self.mass * self.heat_capacity * n == 0:
+                raise ZeroDivisionError(f"Divide 0 error, please check mass and heat_capacity: {e}")
+            else:
+                raise ValueError(f"Failed to convert env_temperature, please check! {e}")
 
 
 class Tree(Item):
@@ -387,7 +393,7 @@ class Map:
     def generate_thermal_view(self, env_temperature):
         """
             Generate thermal view for all blocks.
-            :param blocks:
+            :param env_temperature:
             :return: thermal view of the map
         """
         thermal_image = np.zeros((self.map_shape[0] * self.block_size, self.map_shape[1] * self.block_size),

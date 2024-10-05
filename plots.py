@@ -9,7 +9,8 @@ matplotlib.use('Qt5Agg')
 def main():
     map_config_list = []
 
-    # prompt to ask which scenario to simulate with, and require manual input or not.
+    # Prompt to ask which scenario to simulate with, and require manual input or not.
+    # Keep doing the while loop to do the simulation until get system input for quit.
     print("Welcome to the thermal simulation system! \n")
     print("Would you like to do the simulation?")
     user_selected_system_action = -1
