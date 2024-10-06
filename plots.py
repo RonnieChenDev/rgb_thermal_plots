@@ -118,8 +118,8 @@ def main():
                 ax2.text(x, (y + 1), f'{avg_temp:.1f}', color='white')
 
             plt.pause(1)
-
         plt.show()
+        plt.close()
 
         # ask for the system option again
         next_user_selected_system_action = -1
