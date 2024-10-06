@@ -2,12 +2,28 @@
 Assignment of Fundamentals of Programming COMP5005
 
 ## Contents
-README - readme file for assignment
-canopy.py - add classes and method to the class definitions from PracTest3
+README - readme file for assignment.
+cano.py - module of files for canopy simulations, modified based on the version of my outcome of PracTest3.
+utils.py - utils to handle files/colours/file content/prompt.
+plots.py - plots.py - entrance of main program, to invoke all the methods to generate the map,
+     including RGB view (3d) and thermal view (2d).
+files in 'test' folder - tests for main program
+    testCano.py - testing for cano.py.
+files in 'shell' folder - shell scripts to automate the demonstration.
+    config_file_continuous_temperature.sh - continuous changing temperature scenario, run with config file
+    config_file_high_temperature.sh - high fixed temperature scenario, run with config file
+    config_file_low_temperature.sh - low fixed temperature scenario, run with config file
+    prompt_continuous_temperature.sh - continuous changing temperature scenario, run with prompt
+    prompt_high_temperature.sh - high fixed temperature scenario, run with prompt
+    prompt_high_temperature.sh - high fixed temperature scenario, run with prompt
+files in 'config' folder - configuration files
+    map_configuration.csv - quantity of blocks in row and column, block size, park percentage, separating with ','.
+    temperature_daytime.csv - high fixed temperature; low fixed temperature; temperature over a single day,
+     24 hours from 8am to 7am next day
 
 
 ## Dependencies
-canopy.py - add classes and method to the class definitions from PracTest3
+cano.py - add classes and method to the class definitions based on PracTest3
 numpy
 random
 matplotlib
@@ -23,4 +39,4 @@ math
 04/10/2024 - adjust plots size and align to colorbar
 05/10/2024 - add average temperature calculation and show on thermal view;
  adjust params to ensure effect of plots over time changing period; add prompt to add flexibility (use input or files);
- add shell files for automation inputs; raise exception on basic check; add test to canopy.py
+ add shell files for automation inputs; raise exception on basic check; add test to cano.py

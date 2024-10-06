@@ -1,5 +1,5 @@
 """
-    utils.py - utils to handle files/colours/file content/prompt
+    utils.py - utils to handle files/colours/file content/prompt.
 
     Student Name: Xi CHEN
     Student ID  : 22278096
