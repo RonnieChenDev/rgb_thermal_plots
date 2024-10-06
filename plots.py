@@ -19,14 +19,14 @@ def main():
 
     while user_selected_system_action == 0:
         print("\nPlease select a scenario to simulate with:")
-        scenario_options = ['high temperature', 'low temperature', 'continuously changing temperature']
+        scenario_options = ['High fixed temperature', 'Low fixed temperature', 'Continuously changing temperature']
         user_selected_scenario = -1
         user_selected_scenario = option_list_loop(user_selected_scenario, scenario_options)
 
         print("\nThank you! Now some information of map is required from you.")
         print("Would you like to input by yourself or using the content in config and temperature file?")
         user_selected_input_mode = -1
-        input_modes = ['input by myself', 'use files directly']
+        input_modes = ['Input by myself', 'Use files directly']
         user_selected_input_mode = option_list_loop(user_selected_input_mode, input_modes)
 
         if user_selected_input_mode == 0:
@@ -67,8 +67,6 @@ def main():
         else:
             map_config = get_map_config(read_from_csv("config/map_configuration.csv"))
             env_temp = get_temperature_daytime(read_from_csv("config/temperature_daytime.csv"), user_selected_scenario)
-
-        # TODO: test code
 
         # create a list to hold all the blocks
         blocks = []
