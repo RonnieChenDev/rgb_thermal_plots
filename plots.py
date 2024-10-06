@@ -33,11 +33,14 @@ def main():
             print("\nPlease enter map config.")
             # assume user's input is float numbers. Simply decide on length of input.
             while len(map_config_list) != 4:
-                map_input = input("Sequence is quantity of block rows, quantity of block columns, block size and "
+                try:
+                    map_input = input("Sequence is quantity of block rows, quantity of block columns, block size and "
                                   "park percentage, separating with ',':")
-                map_config_list = map_input.split(',')
-                if len(map_config_list) != 4:
-                    print("Invalid quantity of params, please re-enter! \n")
+                    map_config_list = map_input.split(',')
+                    if len(map_config_list) != 4:
+                        print("Invalid quantity of params, please re-enter! \n")
+                except (ValueError, IndexError) as e:
+                    print("Error input, please re-enter!\n")
 
             map_config_list = [float(i) for i in map_config_list]
             # keys = ['block_size', 'block_row_num', 'block_col_num', 'block_num', 'map_shape', 'park_limit']

@@ -87,11 +87,15 @@ def option_list_loop(user_selected_option, option_list):
     """
     for i, option in enumerate(option_list):
         print(f'{i}, {option}')
+
     while user_selected_option == -1:
-        user_input = int(input("\nPlease enter your option:"))
-        if user_input not in np.arange(len(option_list)):
-            print("No such option. Please re-enter!")
-        else:
-            user_selected_option = user_input
+        try:
+            user_input = int(input("\nPlease enter your option:"))
+            if user_input not in np.arange(len(option_list)):
+                print("No such option. Please re-enter!")
+            else:
+                user_selected_option = user_input
+        except ValueError as e:
+            print("Invalid input, please re-enter!")
 
     return user_selected_option
