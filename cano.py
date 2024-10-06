@@ -9,7 +9,7 @@ import matplotlib
 from utils import *
 import math
 
-matplotlib.use('TKAgg')
+# matplotlib.use('TKAgg')
 
 
 class Item:
