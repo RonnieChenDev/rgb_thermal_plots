@@ -6,7 +6,7 @@
     Student ID  : 22278096
 """
 import matplotlib.pyplot as plt
-from canopy import *
+from cano import *
 from utils import *
 
 matplotlib.use('Qt5Agg')

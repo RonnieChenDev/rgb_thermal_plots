@@ -3,7 +3,7 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from canopy import *
+from cano import *
 
 print("Print objects")
 block = Block(40, (0, 40), 'yard')
