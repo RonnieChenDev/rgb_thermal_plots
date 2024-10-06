@@ -1,3 +1,9 @@
+"""
+    testCano.py - testing for cano.py.
+
+    Student Name: Xi CHEN
+    Student ID  : 22278096
+"""
 import sys
 import os
 
