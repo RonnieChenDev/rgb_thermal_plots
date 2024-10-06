@@ -35,7 +35,7 @@ def main():
             while len(map_config_list) != 4:
                 try:
                     map_input = input("Sequence is quantity of block rows, quantity of block columns, block size and "
-                                  "park percentage, separating with ',':")
+                                      "park percentage, separating with ',':")
                     map_config_list = map_input.split(',')
                     if len(map_config_list) != 4:
                         print("Invalid quantity of params, please re-enter! \n")
