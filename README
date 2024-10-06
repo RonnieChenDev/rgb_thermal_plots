@@ -21,7 +21,6 @@ files in 'config' folder - configuration files
     temperature_daytime.csv - high fixed temperature; low fixed temperature; temperature over a single day,
      24 hours from 8am to 7am next day
 
-
 ## Dependencies
 cano.py - add classes and method to the class definitions based on PracTest3
 numpy
@@ -40,3 +39,12 @@ math
 05/10/2024 - add average temperature calculation and show on thermal view;
  adjust params to ensure effect of plots over time changing period; add prompt to add flexibility (use input or files);
  add shell files for automation inputs; raise exception on basic check; add test to cano.py
+
+ ## Usage Instruction
+ 1. Make sure python3 is installed and configured properly in your environment.
+ 2. Install matplotlib and numpy before run the program.
+ 3. Run the plots.py file by using command 'python3 plots'.
+ 4. Follow the prompt instruction to use the system.
+
+ Or you could use any of the shell scripts mentioned in Contents part above to automate the inputs.
+ Use command 'bash {file_name}.sh' to run it.
