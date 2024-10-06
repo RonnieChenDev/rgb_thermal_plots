@@ -1,7 +1,13 @@
+"""
+    plots.py - entrance of main program, to invoke all the methods to generate the map,
+     including RGB view (3d) and thermal view (2d)
+
+    Student Name: Xi CHEN
+    Student ID  : 22278096
+"""
 import matplotlib.pyplot as plt
 from canopy import *
 from utils import *
-import time
 
 matplotlib.use('Qt5Agg')
 

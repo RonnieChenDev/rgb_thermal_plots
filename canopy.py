@@ -1,5 +1,5 @@
 """
-    canopy.py - module of files for canopy simulations
+    canopy.py - module of files for canopy simulations, modified based on the version of my outcome of PracTest3.
 
     Student Name: Xi CHEN
     Student ID  : 22278096

@@ -1,3 +1,9 @@
+"""
+    utils.py - utils to handle files/colours/file content/prompt
+
+    Student Name: Xi CHEN
+    Student ID  : 22278096
+"""
 import numpy as np
 
 
