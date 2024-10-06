@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 from cano import *
 from utils import *
 
-matplotlib.use('Qt5Agg')
+# matplotlib.use('Qt5Agg')
 
 
 def main():
