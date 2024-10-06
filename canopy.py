@@ -356,7 +356,7 @@ class Map:
         self.map_shape = map_config['map_shape']
         self.park_limit = map_config['park_limit']
 
-        # thermal: daytime temperature list over 12 hours
+        # thermal: daytime temperature list over 24 hours
         self.temperature_daytime_list = temperature_daytime_list
 
     def generate_map_structure(self):
